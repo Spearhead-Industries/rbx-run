@@ -116,6 +116,7 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         req_env.script = obj;
 
         local f = luau.load(obj.Source);
+        setfenv(f, req_env);
         local r = f();
         require_cache[obj] = r;
         return r;

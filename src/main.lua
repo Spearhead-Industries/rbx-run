@@ -61,7 +61,7 @@ function main(argc: number, argv: {string}): number
         stdio.write(`{stdio.color("blue")}Spearhead-Industries{stdio.color("reset")}/{stdio.color("yellow")}rbx-run{stdio.color("reset")} v{VERSION}\n`);
         stdio.write(`Run Roblox games in the terminal.\n\n`);
 
-        stdio.write(`@plainenglish {stdio.style("dim")}<plainenglish@spearhead.industries>{stdio.style("reset")}\n\n`);
+        --stdio.write(`@plainenglish {stdio.style("dim")}<plainenglish@spearhead.industries>{stdio.style("reset")}\n\n`);
    
         stdio.write(`{stdio.color("yellow")}USAGE:{stdio.color("reset")}\n`);
         stdio.write(`    rbx-run <SUBCOMMAND> [ARGUMENTS]\n\n`)

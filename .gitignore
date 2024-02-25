@@ -1,2 +1,7 @@
 /out
 */*.lock
+
+# LPM
+
+/out
+/lpm_modules

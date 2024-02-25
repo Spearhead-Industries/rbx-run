@@ -1,6 +1,10 @@
 {
-  "luau-lsp.require.mode": "relativeToFile",
   "luau-lsp.require.directoryAliases": {
+    "@lpm/": "./lpm_modules/",
     "@lune/": "~/.lune/.typedefs/0.8.0/"
-  }
+  },
+  "luau-lsp.require.mode": "relativeToFile",
+  "luau-lsp.types.definitionFiles": [
+    "C:\\Users\\plain/.lpm/.typedefs/1.0.1/def.d.lua"
+  ]
 }

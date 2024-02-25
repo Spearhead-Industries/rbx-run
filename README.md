@@ -42,7 +42,7 @@ cd rbx-run
 aftman install
 
 # Run the build script
-lune run ./scripts/build.lua
+lpm build --mkarchive
 
 # The executable should now be available in ./out/
 ```

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0] - 25th Feburary 2024
+
+### Changed
+
+- Converted into a LPM package.
+
 ## [1.1.1] - 25th Feburary 2024
 
 ### Fixed

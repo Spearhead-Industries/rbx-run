@@ -1,23 +1,52 @@
+--// Preamble //--
+
 local process = require("@lune/process");
 local fs = require("@lune/fs");
 
-if not fs.isDir("./out") then
-    fs.writeDir("./out");
+local EXT = if process.os == "windows" then ".exe" else "";
+local BINARY_NAME = "./out/rbx-run"..EXT;
+local ARCHIVE_NAME = `./out/rbx-run-{process.os}-{process.arch}.zip`;
+
+local function run(cmd: string)
+    local parts = cmd:split(" ");
+    local app = parts[1];
+    table.remove(parts, 1);
+
+    process.spawn(app, parts, {
+        stdio = "forward"
+    });
 end
 
--- lune calling lune... it really makes you think.
-process.spawn("lune", {"build", "./src/main.lua", "-o", "./out/rbx-run"..if process.os == "windows" then ".exe" else ""}, {
-    stdio = "forward"
-});
+local function check(cmd: string, arg: string)
+    assert(process.spawn(cmd, {arg}).ok, `{cmd} must be installed.`);
+end
+
+
+--// Check Env //--
+
+check("lune", "--version");
+check("darklua", "--version");
 
 if process.os == "windows" then
-    process.spawn("powershell", {"Compress-Archive", "./out/rbx-run.exe", `./out/rbx-run-{process.os}-{process.arch}.zip`, "-Force"}, {
-        stdio = "forward"
-    });
+    check("powershell", "-Help");
 else
-    process.spawn("zip", {"-r", "./out/rbx-run.exe", `./out/rbx-run-{process.os}-{process.arch}.zip`}, {    -- sudo apt-get install zip
-        stdio = "forward"
-    });
+    check("zip", "--version");
 end
 
-print(process.arch)
+
+--// Build Steps //--
+
+if fs.isDir("./out") then
+    fs.removeDir("./out");
+end
+
+fs.writeDir("./out");
+
+run("darklua process -c ./darklua.json ./src/main.lua ./out/bundled.lua");
+run(`lune build ./out/bundled.lua -o {BINARY_NAME}`);
+
+if process.os == "windows" then
+    run(`powershell Compress-Archive {BINARY_NAME} {ARCHIVE_NAME} -Force`)
+else
+    run(`zip -r {BINARY_NAME} {ARCHIVE_NAME}`);
+end

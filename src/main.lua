@@ -234,6 +234,7 @@ local function run
 
         roblox.implementMethod("LogService", "GetLogHistory", empty_array);
         roblox.implementProperty("LogService", "MessageOut", empty_connection(log_connections));
+        
         roblox.implementMethod("Players", "GetPlayers", empty_array);
         roblox.implementProperty("Players", "PlayerAdded", empty_connection());
     

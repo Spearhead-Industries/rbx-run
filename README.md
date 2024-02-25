@@ -6,7 +6,7 @@
 
 A CLI tool to run Roblox place files.
 
-This tool provides a partial implementation of the Roblox API using [Lune](https://github.com/lune-org/lune)'s `roblox` builtin library. Run and test Roblox games via a CLI for quick analysis or for use in CI/CD pipelines.
+This tool provides a partial implementation of the Roblox API using [Lune](https://github.com/lune-org/lune)'s `roblox` builtin library. Run and test Roblox games for quick analysis or for use in CI/CD pipelines.
 
 ## Usage
 

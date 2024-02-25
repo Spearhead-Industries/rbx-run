@@ -12,7 +12,7 @@
 -- Why a single script? i dont wanna have to setup darklua to bundle it.
 -- maybe ill do it later
 
-local VERSION = "1.0.0";
+local VERSION = "1.1.0";
 
 type roblox = {[any]: any};
 
@@ -20,6 +20,14 @@ local process = require("@lune/process");
 local stdio = require("@lune/stdio");
 local fs = require("@lune/fs");
 local roblox = require("@lune/roblox") :: roblox;
+
+local temp;
+
+if process.os == "windows" then
+    temp = process.env["Temp"].."/rbx-run/";
+else
+    temp = "/tmp/rbx-run/";
+end
 
 
 --------------------------------------------------------------------------------
@@ -34,26 +42,46 @@ function main(argc: number, argv: {string}): number
 
     if subcommand == "run" or subcommand == "test" then
         local place = argv[2];
-        if not place then
-            stdio.write("Please specify a place file.");
-            return 1;
+        if place:sub(1, 1) == "-" then
+            place = nil;
         end
+        
+        local rm_place_after = false;
 
-        if not fs.isFile(place) then
+        if place and not fs.isFile(place)then
             stdio.write(`Place '{place}' does not exist.`);
             return 1;
+        else
+            if not fs.isDir(temp) then
+                fs.writeDir(temp);
+            end
+
+            place = temp.."rbx-run-temp.rbxl";
+            local build = process.spawn("rojo", {"build", "--output", place});
+
+            if not build.ok then
+                stdio.write(`Couldn't build any projects: {build.stderr}.`);
+                return 1;
+            else
+                rm_place_after = true;
+            end
         end
 
         local datamodel = roblox.deserializePlace(fs.readFile(place));
         local run = require("./run/init");
 
-        run(
+        local exit_code = run(
             datamodel,
             "server",
             subcommand == "test",
             table.find(argv, "--noloop") ~= nil
         );
 
+        if rm_place_after then
+            fs.readFile(place);
+        end
+
+        return exit_code;
     elseif subcommand == "version" or subcommand == "-v" then
         stdio.write(`Spearhead-Industries/rbx-run v{VERSION}`);
 
@@ -70,6 +98,9 @@ function main(argc: number, argv: {string}): number
         stdio.write(`    {stdio.color("green")}run    {stdio.color("reset")}Run the project.\n`);
         stdio.write(`    {stdio.color("green")}test   {stdio.color("reset")}Run the project with the test api.\n`);
         stdio.write(`    {stdio.color("green")}help   {stdio.color("reset")}Print this text.\n`);
+    else
+        stdio.write(`Unknown command '{subcommand}'.`)
+        return 1;
     end
     
     return 0;

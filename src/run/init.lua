@@ -162,7 +162,7 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         end
     end
 
-    process.exit(exit_code);
+    return exit_code;
 end
 
 return run;

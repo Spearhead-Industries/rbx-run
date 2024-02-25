@@ -49,11 +49,13 @@ lune run ./scripts/build.lua
 ### Running
 
 ```bash
-rbx-run run [PATH]
+rbx-run run [PATH] <OPTIONS>
 ```
 
 This will implement the Roblox API and execute the scripts in a Server run context.
 You can disable the game loop (RenderStepped, Stepped, etc) by adding the `--noloop` flag.
+
+If 'PATH' is absent, it will attempt to call `rojo build` in the current working directory to create a temporary file to run from.
 
 ### Tests
 
@@ -61,9 +63,14 @@ You can disable the game loop (RenderStepped, Stepped, etc) by adding the `--nol
 rbx-run test [PATH]
 ```
 
-You can use rbx-run to perform rudimentary unit testing. When you call `rbx-run test`, an RBX_RUN_TEST function is injected into the global environment.
+You can use rbx-run to perform rudimentary unit testing.
 
-RBX_RUN_TEST accepts two arguments; (1) a string to identify the test, and (2) a function to run.
+The test command generally has the same functionality as `run`, except;
+
+- A test function is injected.
+- The game loop is never started.
+
+A function titled `RBX_RUN_TEST` is added to the global environment and accepts two arguments; (1) a string to identify the test, and (2) a function to run.
 
 A test is deemed to pass if the function executes successfully, and is deemed to fail if it throws an error.
 
@@ -79,7 +86,7 @@ RBX_RUN_TEST("test_that_succeeds", function()
 end);
 ```
 
-Running the `rbx-run test` command gives us:
+Running the `rbx-run test` command gives us
 
 ```raw
 [ FAIL ] test_that_fails - Epic Fail
@@ -89,7 +96,7 @@ Running the `rbx-run test` command gives us:
 and exits with a code of 1 to indicate the failed tests.
 
 > [!NOTE]  
-> The test command does not initiate the game loop, RenderStepped, Stepped and Heartbeat will never fire in test mode.
+> The test command does not start the game loop, RenderStepped, Stepped and Heartbeat will never fire in test mode.
 
 ## Limitations
 

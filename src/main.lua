@@ -20,7 +20,7 @@ local roblox = require("@lune/roblox") :: roblox;
 local luau = require("@lune/luau");
 local serde = require("@lune/serde");
 local task = require("@lune/task");
-
+local datetime = require("@lune/datetime");
 
 local function empty_connection(connections: {any}?)
     return function()
@@ -118,6 +118,29 @@ local function run
     new_env._G.RBX_RUN_TEST = new_env.RBX_RUN_TEST;
 
     local require_cache = {};
+
+    local function datetime_wrapper(obj)
+        return setmetatable({}, {
+            __index = function(self, idx)
+                if idx == "ToIsoDate" then
+                    return function()
+                        return obj:toIsoDate();
+                    end
+                else
+                    return obj[idx];                        
+                end
+            end
+        });
+    end
+
+    new_env.DateTime = {
+        now = function()
+            return datetime_wrapper(datetime.now());
+        end,
+        fromUnixTimestamp = function(t)
+            return datetime_wrapper(datetime.fromUnixTimestamp(t))
+        end
+    };
 
     -- Why not use luau.load(obj.Source) you ask... because its a lot slower.
     new_env.require = function(obj: Script|LocalScript)

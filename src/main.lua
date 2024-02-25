@@ -52,7 +52,12 @@ end
 --  run
 -- 
 --------------------------------------------------------------------------------
-local function run(datamodel: DataModel, context: "server"|"client", test_enabled: boolean?)
+local function run
+    (datamodel: DataModel,
+    context: "server"|"client",
+    test_enabled: boolean?,
+    no_loop: boolean?
+)
     local new_env = table.clone(getfenv());
 
     setmetatable(new_env, {
@@ -63,7 +68,7 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         end
     });
 
-    new_env._G.RBX_RUN_TEST = test_enabled or false;
+    new_env._G.RBX_RUN_TEST_ENABLED = test_enabled or false;
 
     new_env.game = datamodel;
     new_env.workspace = datamodel:GetService("Workspace");
@@ -81,6 +86,36 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
     new_env.Enum = roblox.Enum;
     new_env.task = task;
     new_env.Instance = roblox.Instance;
+
+    local exit_code = 0;
+
+    if test_enabled then
+        new_env.print = function() end; -- suppress print.
+        new_env.RBX_RUN_TEST = function(label: string, case: ()->())
+            local success, err = pcall(case);
+
+            if success then
+                stdio.write(`[ {stdio.color("green")}PASS{stdio.color("reset")} ] `);
+            else
+                stdio.write(`[ {stdio.color("red")}FAIL{stdio.color("reset")} ] `);
+                exit_code = 1;
+            end
+
+            stdio.write(label);
+
+            err = tostring(err):match("%[string \".+\"%]:%d+: (.+)");
+
+            if not success then
+                stdio.write(" - "..err);
+            end
+
+            stdio.write("\n");
+        end
+    else
+        new_env.RBX_RUN_TEST = function() end
+    end
+
+    new_env._G.RBX_RUN_TEST = new_env.RBX_RUN_TEST;
 
     local require_cache = {};
 
@@ -203,14 +238,6 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         );
     end
 
-    task.spawn(function()
-        while task.wait(1/60) do
-            for _, cb in pairs(heartbeat_connections) do
-                cb();
-            end
-        end
-    end);
-
     if context == "server" then
         for _, v in pairs(datamodel:GetDescendants()) do
             if v.ClassName == "Script" and (v.RunContext == roblox.Enum.RunContext.Server or v.RunContext == roblox.Enum.RunContext.Legacy) then
@@ -224,6 +251,16 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
             end
         end
     end
+
+    if not test_enabled and not no_loop then
+        while task.wait(1/60) do
+            for _, cb in pairs(heartbeat_connections) do
+                cb();
+            end
+        end
+    end
+
+    process.exit(exit_code);
 end
 
 
@@ -237,7 +274,7 @@ end
 function main(argc: number, argv: {string}): number
     local subcommand = argv[1];
 
-    if subcommand == "run" then
+    if subcommand == "run" or subcommand == "test" then
         local place = argv[2];
         if not place then
             stdio.write("Please specify a place file.");
@@ -250,7 +287,13 @@ function main(argc: number, argv: {string}): number
         end
 
         local datamodel = roblox.deserializePlace(fs.readFile(place));
-        run(datamodel, "server", false);
+        
+        run(
+            datamodel,
+            "server",
+            subcommand == "test",
+            table.find(argv, "--noloop") ~= nil
+        );
 
     elseif subcommand == "version" or subcommand == "-v" then
         stdio.write(`Spearhead-Industries/rbx-run v{VERSION}`);

@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.1.0] - [date]
+## [1.1.1] - 25th Feburary 2024
+
+### Fixed
+
+- Fixed bug where the run command would fail if there was no path or flag.
+
+## [1.1.0] - 25th Feburary 2024
 
 ### Added
 

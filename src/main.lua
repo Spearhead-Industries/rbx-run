@@ -12,7 +12,7 @@
 -- Why a single script? i dont wanna have to setup darklua to bundle it.
 -- maybe ill do it later
 
-local VERSION = "1.1.0";
+local VERSION = "1.1.1";
 
 type roblox = {[any]: any};
 
@@ -42,10 +42,10 @@ function main(argc: number, argv: {string}): number
 
     if subcommand == "run" or subcommand == "test" then
         local place = argv[2];
-        if place:sub(1, 1) == "-" then
+        if place and place:sub(1, 1) == "-" then
             place = nil;
         end
-        
+
         local rm_place_after = false;
 
         if place and not fs.isFile(place)then

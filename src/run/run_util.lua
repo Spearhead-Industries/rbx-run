@@ -1,3 +1,5 @@
+local RBXScriptSignal = require("../classes/rbxscriptsignal");
+
 local function provider(obj: any)
     return function()
         return obj;
@@ -13,7 +15,7 @@ local function noop()
 end
 
 local function empty_connection(connections: {any}?)
-    
+    return provider(RBXScriptSignal.new());
 end
 
 local function empty_array()

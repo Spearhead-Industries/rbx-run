@@ -125,13 +125,16 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         context = context
     };
 
-    
+
     --// Services //--
 
-    require("./services/runservice")(info);
-    require("./services/players")(info);
-    require("./services/httpservice")(info);
-    require("./services/logservice")(info);
+    (require("./services/runservice"))(info);
+
+    (require("./services/players"))(info);
+    
+    (require("./services/httpservice"))(info);
+    
+    (require("./services/logservice"))(info);
 
 
     --// Start //--

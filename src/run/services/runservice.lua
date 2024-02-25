@@ -1,4 +1,5 @@
 local roblox = require("@lune/roblox") :: {[any]:any};
+local run_util = require("../run_util");
 
 return function(info)
     roblox.implementMethod("RunService", "IsServer", function(instance)
@@ -30,7 +31,7 @@ return function(info)
         return;
     end);
 
-    roblox.implementProperty("RunService", "Heartbeat", info.con.Stepped);
-    roblox.implementProperty("RunService", "RenderStepped", info.con.Stepped);
-    roblox.implementProperty("RunService", "Stepped", info.con.Stepped);
+    roblox.implementProperty("RunService", "Heartbeat", run_util.provider(info.con.Stepped));
+    roblox.implementProperty("RunService", "RenderStepped", run_util.provider(info.con.Stepped));
+    roblox.implementProperty("RunService", "Stepped", run_util.provider(info.con.Stepped));
 end

@@ -2,16 +2,11 @@
 
 # rbx-run
 
-Running Roblox games in the terminal.
 </div>
 
------
+A CLI tool to run Roblox place files.
 
-## About
-
-This tool provides a partial implementation of the Roblox API for running place files using [Lune](https://github.com/lune-org/lune).
-
------
+This tool provides a partial implementation of the Roblox API using [Lune](https://github.com/lune-org/lune)'s `roblox` builtin library. Run and test Roblox games via a CLI for quick analysis or for use in CI/CD pipelines.
 
 ## Usage
 
@@ -59,8 +54,6 @@ and exits with a code of 1 to indicate the failed tests.
 
 > [!NOTE]  
 > The test command does not initiate the game loop, RenderStepped, Stepped and Heartbeat will never fire in test mode.
-
------
 
 ## Limitations
 

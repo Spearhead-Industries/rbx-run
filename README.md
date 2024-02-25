@@ -101,8 +101,8 @@ and exits with a code of 1 to indicate the failed tests.
 
 ### Non-goals
 
-- Physics
-- 
+- Physics Simulation
+- Complete 1:1 feature parity with Roblox APIs.
 
 ## Contributing
 

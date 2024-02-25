@@ -10,6 +10,9 @@ This tool provides a partial implementation of the Roblox API using [Lune](https
 
 **Maintainer:** @plainenglishh
 
+> [!WARNING]  
+> If rbx-run builds the project on your behalf, such as if no path was provided, and the command doesn't run to completion a temporary rbxl file will linger at `<temp>/rbx-run/` `(win=%Temp%, unix=/tmp)`. Users with stringent security requirements should take note of this and either ensure the command runs to completion (--noloop) or delete this file manually. 
+
 ## Installation
 
 ### Aftman (Recommended)

@@ -114,3 +114,53 @@ and exits with a code of 1 to indicate the failed tests.
 ## Contributing
 
 Pull requests for both bug-fixes and feature implementations are welcome.
+
+## API Coverage
+
+|Icon|Meaning|
+|---|---|
+|✅|Supported|
+|⚠️|Supported, but with caveats|
+|❌|Will not support|
+
+### Complete
+
+- HttpService
+  - ✅ JSONEncode
+  - ✅ JSONDecode
+  - ✅ GenerateGUID
+  - ⚠️ GetSecret - Checks the environment variables
+  - ✅ UrlEncode
+  - ⚠️ GetAsync - Cache is ignored.
+  - ⚠️ PostAsync - Compress and Type are ignored for now, use Headers to set contenttype.
+  - ⚠️ RequestAsync - Compress is ignored for now.
+  - ⚠️ HttpEnabled - Assumed to be true.
+
+- LogService
+  - ✅ ClearOutput - Uses ANSI escape sequence to clear terminal.
+  - ✅ GetLogHistory
+  - ✅ MessageOut
+
+- RunService
+  - ✅ RenderStepped
+  - ✅ Stepped - Same Loop as RenderStepped
+  - ✅ Heartbeat - Same Loop as RenderStepped
+  - ⚠️ BindToRenderStepped - Same Loop as RenderStepped, priority is ignored.
+  - ✅ PostSimulation - Same Loop as RenderStepped
+  - ✅ PreAnimation - Same Loop as RenderStepped
+  - ✅ PreRender - Same Loop as RenderStepped
+  - ✅ PreSimulation - Same Loop as RenderStepped
+  - ✅ IsServer
+  - ✅ IsClient
+  - ✅ IsStudio - Always true
+  - ✅ IsEdit
+  - ⚠️ IsRunMode - Always true, will change when Client mode is added.
+  - ✅ IsRunning
+  - ✅ UnbindFromRenderStep
+
+### In Progress
+
+- Players
+  - ⚠️ GetPlayers - Always empty, will change when Client mode is added.
+  - ⚠️ PlayerAdded - Never Fires, will change when Client mode is added.
+  

@@ -19,7 +19,7 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
     new_env.game = datamodel;
     new_env.workspace = datamodel:GetService("Workspace");
     new_env.Workspace = new_env.workspace;
-    
+
     new_env.NumberRange = roblox.NumberRange;
     new_env.Color3 = roblox.Color3;
     new_env.BrickColor = roblox.BrickColor;
@@ -117,14 +117,46 @@ local function run(datamodel: DataModel, context: "server"|"client", test_enable
         end
     );
 
+    local logs = {};
+
     local info = {
         con = {
             Stepped = RBXScriptSignal.new(),
             LogOut = RBXScriptSignal.new()
         },
-        context = context
+        context = context,
+        logs = logs
     };
 
+    new_env.print = function(...)
+        local msg = "";
+        for _, v in pairs({...}) do
+            msg ..= tostring(v) .. " ";
+        end
+
+        info.con.LogOut:Fire(msg, roblox.Enum.MessageType.MessageOutput);
+        
+        print(...);
+    end
+
+    new_env.warn = function(...)
+        local msg = "";
+        for _, v in pairs({...}) do
+            msg ..= tostring(v) .. " ";
+        end
+
+        info.con.LogOut:Fire(msg, roblox.Enum.MessageType.MessageWarning);
+        
+        warn(...);
+    end
+
+    info.con.LogOut:Connect(function(msg, msgtype)
+        table.insert(logs, {
+            message = msg,
+            messageType = msgtype,
+            timestamp = os.time()
+        });
+    end);
 
     --// Services //--
 

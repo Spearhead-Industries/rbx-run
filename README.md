@@ -57,6 +57,9 @@ Running the `rbx-run test` command gives us:
 
 and exits with a code of 1 to indicate the failed tests.
 
+> [!NOTE]  
+> The test command does not initiate the game loop, RenderStepped, Stepped and Heartbeat will never fire in test mode.
+
 -----
 
 ## Limitations

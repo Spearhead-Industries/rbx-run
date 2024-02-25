@@ -12,7 +12,7 @@
 -- Why a single script? i dont wanna have to setup darklua to bundle it.
 -- maybe ill do it later
 
-local VERSION = "1.1.1";
+local VERSION = "1.2.0";
 
 type roblox = {[any]: any};
 

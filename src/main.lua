@@ -2,12 +2,15 @@
 -- 
 --  main.lua - Spearhead-Industries/rbx-run
 --
---  Entrypoint
+--  The entrypoint file.
 --
 --  plainenglish
 --  Feburary 2024
 --
 --------------------------------------------------------------------------------
+
+-- Why a single script? i dont wanna have to setup darklua to bundle it.
+-- maybe ill do it later
 
 local VERSION = "1.0.0";
 

@@ -93,11 +93,17 @@ and exits with a code of 1 to indicate the failed tests.
 
 ## Limitations
 
-At the moment, the following limitations apply;
+### Subject to change
 
-- rbx-run can only run as in the Server RunContext.
-- Most of the Roblox API is unimplemeneted.
+- As of v1.1.0, rbx-run can only run as the server.
+- Most of the Roblox API is unimplemented.
+- Networking (RemoteFunction, RemoteEvent, Replication, etc) is currently not implemented.
 
-These limitations will reduce as time goes on. This tool was adapted from the Terahertz Game Framework CLI, as such it only implements methods the base THz framework uses.
+### Non-goals
 
------
+- Physics
+- 
+
+## Contributing
+
+Pull requests for both bug-fixes and feature implementations are welcome.
